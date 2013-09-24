@@ -26,16 +26,16 @@ module FunWithStrings
   end
 
   def anagram_groups
-    hash = Hash.new(0)
-    s = self
-    if s.empty?
+    hash = Hash.new
+    #s = self
+    if self.empty?
       return []
     end
-    #s = self.split(/[^\w]/)
+    s = self.split(/[^\w]/)
     s.each do |word|
       sortedWord = sortword(word)
       if hash[sortedWord] == nil
-        hash[sortedWord] = [] << word
+        hash[sortedWord] = [word]
       else
         hash[sortedWord] << word
       end

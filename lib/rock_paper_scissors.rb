@@ -5,64 +5,45 @@ class RockPaperScissors
 
   def self.winner(player1, player2)
     # YOUR CODE HERE
-    raise NoSuchStrategyError unless (player1.upcase.match(/[SRP]/) && player2.upcase.match(/[SRP]/))
-    if player1==player2
+    raise NoSuchStrategyError, "Strategy must be one of R,P,S" unless player1[1] =~ /[SRP]/ && player2[1] =~ /[SRP]/
+    if player1[1]==player2[1]
     	return player1
   	end
-  	if player1 == "S" && player2 == "P"
+  	if player1[1] == "S" && player2[1] == "P"
     	return player1
   	end
-  	if player1=="S" && player2=="R"
+  	if player1[1]=="S" && player2[1]=="R"
     	return player2
   	end
-  	if player1=="R" && player2=="P"
+  	if player1[1]=="R" && player2[1]=="P"
     	return player2
   	end
-  	if player1=="R" && player2=="S"
+  	if player1[1]=="R" && player2[1]=="S"
     	return player1
   	end
-  	if player1=="P" && player2=="S"
+  	if player1[1]=="P" && player2[1]=="S"
     	return player2
   	end
-  	if player1=="P" && player2=="R"
+  	if player1[1]=="P" && player2[1]=="R"
     	return player1
   	end
   end
 
-  def game_winner(game)
-  	raise WrongNumberOfPlayersError unless game.length == 2
-  	if game[0][0].is_a?(String)
-    	p1 = game[0]
-    	p2 = game[1]
-    	if self.winner(p1[1],p2[1]) == p1[1]
-      		return p1
-    	else
-      		return p2
-    	end
-  	else
-    	p1 = game_winner(game[0])
-    	p2 = game_winner(game[1])
-    	if self.winner(p1[1],p2[1]) == p1[1]
-      		return p1
-    	else
-      		return p2
-    	end
-  	end
+  def self.is_player_move?(arr)
+  	return arr[0].is_a?(String) && arr[1].is_a?(String)
   end
-
 
   def self.tournament_winner(tournament)
-    # YOUR CODE HERE
-    if tournament[0][0].is_a?(String)
-    	game1 = game_winner(tournament)
-    	return game1
-  	else
-    	bracket1 = game_winner(tournament[0])
-    	bracket2 = game_winner(tournament[1])
-    	new_bracket = [bracket1, bracket2]
-    	return game_winner(new_bracket)
-  	end
+  	return get_winner(tournament[0], tournament[1])
+  end
 
+  def self.get_winner(a, b)
+  	raise WrongNumberOfPlayersError unless a.length == 2 && b.length == 2
+  	if is_player_move?(a) && is_player_move?(b)
+  		return winner(a, b)
+  	else
+  		return get_winner(get_winner(a[0], a[1]), get_winner(b[0], b[1]))
+  	end
   end
 
 end
